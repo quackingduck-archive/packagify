@@ -1,0 +1,22 @@
+{
+  "name": "packagify",
+  "version": "0.0.0",
+  "description": "Convert a module file to module package",
+  "bin": {
+    "packagify": "packagify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quackingduck/packagify"
+  },
+  "author": "Myles Byrne <myles@myles.id.au>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quackingduck/packagify/issues"
+  },
+  "keywords": [
+    "package",
+    "module",
+    "npm"
+  ]
+}

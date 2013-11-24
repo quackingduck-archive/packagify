@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Convert a module to file to a module folder with a package.json
+
+set -e
+
+function die {
+  echo $1
+  exit 1
+}
+
+filename=$1
+dirname=${1/.js/} # strips the extension
+
+test   -f "$filename" || die "$filename isn't a file"
+! test -d "$dirname"  || die "$dirname directory already exists"
+
+mkdir "$dirname"
+cp "$filename" "$dirname"/index.js
+
+# Author
+author_name=`  git config user.name`
+author_email=` git config user.email`
+
+year=`date '+%Y'`
+
+license=`cat <<EOS
+Copyright (c) $year $author_name
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOS`
+
+echo "$license" > $dirname/LICENSE
+
+touch $dirname/test.js
+
+package=`cat <<EOS
+{
+  "name": "$dirname",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": {
+    "name" : "$author_name"
+    "email" : "$author_email"
+  },
+  "license": "MIT"
+}
+EOS`
+
+echo "$package" > $dirname/package.json
+
+touch "$dirname"/README.md
+
+rm $filename
+
+echo "Next up, edit README.md and write a sentence about the module's intent"
+echo 'then copy it into the description field of package.json'
+echo
+echo 'If the module is not indented for public consumption then replace'
+echo '"license": "MIT" with "private": true in package.json and delete the'
+echo 'LICENSE file'
