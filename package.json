@@ -1,6 +1,6 @@
 {
   "name": "packagify",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Convert a module file to module package",
   "bin": {
     "packagify": "packagify"
